@@ -7,32 +7,50 @@ import TodoItems from "./components/TodoItems";
 class App extends Component{
     constructor() {
         super();
-        this.ToDoList = [
-            { title : "Nghe Nhạc" , isComplete: true },
-            { title : "Đi ngủ" , isComplete: true},
-            { title : "Học bài" }
-        ];
+        this.state = {
+            todoItems: [
+                { title : "Nghe Nhạc" , isComplete: true },
+                { title : "Đi ngủ" , isComplete: true},
+                { title : "Học bài" }
+            ]
+        };
 
 
     }
 
-    onItemClicked() {
+    onItemClicked(item) {
+        return (event) => {
+            console.log("Rendering....", item);
+            const isComplete = item.isComplete;
+            const { todoItems } =  this.state;
+            const index = todoItems.indexOf(item);
 
+            this.setState({
+                todoItems: [
+                    ...todoItems.slice(0, index),
+                    {
+                        ...item,
+                        isComplete: !isComplete
+                    },
+                    ...todoItems.slice(index + 1)
+                ]
+            })
+        }
     }
 
     render() {
-          return (
-              <div className="App">
-                  {
-                      this.ToDoList.length > 0 &&  this.ToDoList.map((item, index) =>
-                          <TodoItems item={item} key={index} onClick={this.onItemClicked} />
-                      )
-                  }
-                  {
-                      this.ToDoList.length === 0 && 'Nothing Here'
-                  }
-              </div>
-          );
+          const { todoItems } = this.state;
+          if(todoItems.length){
+              return (
+                  <div className="App">
+                      {
+                          todoItems.length &&  todoItems.map((item, index) =>
+                              <TodoItems item={item} key={index} onClick={this.onItemClicked(item)} />
+                          )
+                      }
+                  </div>
+              );
+          }
     }
 }
 
