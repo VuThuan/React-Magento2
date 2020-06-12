@@ -1,0 +1,29 @@
+.TranfficLight{
+    display: flex;
+    flex-direction: column;
+}
+
+.TranfficLight .bulb {
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 10px;
+    opacity: 0.2;
+}
+
+.TranfficLight .bulb.active {
+    opacity: 1;
+}
+
+.TranfficLight .bulb.red {
+    background-color: red;
+}
+
+.TranfficLight .bulb.green {
+    background-color: green;
+}
+
+.TranfficLight .bulb.orange {
+    background-color: orange;
+}
