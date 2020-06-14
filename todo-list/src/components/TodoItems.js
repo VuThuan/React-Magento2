@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import './TodoItems.css';
 import classNames from 'classnames';
+import PropTypes from "prop-types";
+
+import './TodoItems.css';
 import checkImg from "../img/check.svg";
 import checkCompleteImg from "../img/check-complete.svg";
+
 
 class TodoItems extends Component {
     // constructor(props) {
@@ -33,5 +36,13 @@ class TodoItems extends Component {
         );
     }
 }
+
+TodoItems.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    item : PropTypes.shape({
+        isComplete: PropTypes.bool.isRequired,
+        title: PropTypes.string.isRequired
+    })
+};
 
 export default TodoItems;

@@ -12,14 +12,19 @@ class App extends Component{
             newItem : '',
             currentFilter : 'all', //  all, active, completed
             todoItems: [
-                { title : "Nghe Nhạc" , isComplete: true },
-                { title : "Đi ngủ" , isComplete: true},
-                { title : "Học bài" }
+                { title : "Nghe Nhạc" , isComplete: false },
+                { title : "Đi ngủ" , isComplete: false},
+                { title : "Học bài" , isComplete: false}
             ]
         };
 
+        this.inputElement = React.createRef();
         this.onKeyUp =  this.onKeyUp.bind(this);
         this.onChange = this.onChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.inputElement.current.focus();
     }
 
     onItemClicked(item) {
@@ -82,6 +87,7 @@ class App extends Component{
                                 value={newItem}
                                 onChange={this.onChange}
                                 onKeyUp={this.onKeyUp}
+                                ref={this.inputElement}
                             />
                       </div>
                       {
