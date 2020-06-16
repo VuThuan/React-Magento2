@@ -2,11 +2,39 @@ import React, {Component} from 'react';
 import TaskItem from "./TaskItem";
 
 class TaskList extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterName: '',
+            filterStatus : -1
+        }
+    }
+
+    onHandleChange = (e) => {
+        const target = e.target;
+        const name = target.name;
+        const value = target.value;
+        this.props.onFilter(
+            name === 'filterName' ? value : this.state.filterName,
+            name === 'filterStatus' ? value : this.state.filterStatus,
+        );
+        this.setState({
+            [name] : value
+        });
+    }
+
     render() {
         const { tasks } = this.props;
         const elementMap = tasks.map(
             (task, index) => {
-                return <TaskItem taskItem={task} keyIndex={index} key={index} />
+                return <TaskItem taskItem={task}
+                                 keyIndex={index}
+                                 key={index}
+                                 onUpdateStatus={this.props.onUpdateStatus}
+                                 onHandleDelete={this.props.onHandleDelete}
+                                 onHandleUpdate={this.props.onHandleUpdate}
+                />
             }
         );
 
@@ -26,10 +54,19 @@ class TaskList extends Component{
                         <tr>
                             <td></td>
                             <td>
-                                <input type="text" className="form-control"/>
+                                <input type="text"
+                                       className="form-control"
+                                       name="filterName"
+                                       value={this.state.filterName}
+                                       onChange={this.onHandleChange}
+                                />
                             </td>
                             <td>
-                                <select className="form-control">
+                                <select className="form-control"
+                                        name="filterStatus"
+                                        value={this.state.filterStatus}
+                                        onChange={this.onHandleChange}
+                                >
                                     <option value="-1">Tất Cả</option>
                                     <option value="0">Ẩn</option>
                                     <option value="1">Kích Hoạt</option>
