@@ -35,7 +35,7 @@ class Search extends Component{
                     />
                     <span className="input-group-btn">
                             <button onClick={this.onHandleSearch} className="btn btn-primary" type="button">
-                                <span className="fa fa-search mr-5">Tìm</span>
+                                <span className="fa fa-search mr-5"></span>&nbsp;&nbsp;&nbsp;&nbsp;Tìm
                             </button>
                         </span>
                 </div>

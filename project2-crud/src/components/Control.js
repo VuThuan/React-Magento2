@@ -9,7 +9,9 @@ class Control extends Component{
                 {/*Search*/}
                 <Search onHandleSearch={this.props.onHandleSearch} />
                 {/*Sort*/}
-                <Sort />
+                <Sort onHandleSort={this.props.onHandleSort}
+                      sortBy={this.props.sortBy}
+                      sortValue={this.props.sortValue} />
             </div>
         );
     }

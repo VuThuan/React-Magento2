@@ -3,6 +3,7 @@ import './App.css';
 import TaskForm from "./components/TaskForm";
 import Control from "./components/Control";
 import TaskList from "./components/TaskList";
+import _ from 'lodash';
 
 class App extends Component{
     constructor(props) {
@@ -15,7 +16,9 @@ class App extends Component{
                 name : '',
                 status: -1
             },
-            keyword: ''
+            keyword: '',
+            sortBy : 'name',
+            sortValue: 1
         }
     }
 
@@ -80,7 +83,10 @@ class App extends Component{
 
     onUpdateStatus = (id) => {
         const { tasks } = this.state;
-        const key = this.findByID(id);
+        // const key = this.findByID(id);
+        const key = _.findIndex(tasks, (task) => {
+            return task.id === id;
+        })
 
         if(key !== -1) {
             tasks[key].status = !tasks[key].status;
@@ -139,12 +145,27 @@ class App extends Component{
 
     onHandleSearch = (keyword) => {
         this.setState({
-            keyword: keyword
+            keyword: keyword.toLowerCase()
+        });
+    }
+
+    onHandleSort = (sortBy, sortValue) => {
+        this.setState({
+            sortBy: sortBy,
+            sortValue: sortValue
         });
     }
 
     render() {
-        let { tasks, isDisplayForm, taskEditing, filter, keyword } = this.state;
+        let {
+            tasks,
+            isDisplayForm,
+            taskEditing,
+            filter,
+            keyword ,
+            sortBy,
+            sortValue
+        } = this.state;
         const elementTaskForm = isDisplayForm ? <TaskForm
                         onCloseForm={this.onCloseForm}
                         onSubmit={this.onSubmit}
@@ -167,10 +188,29 @@ class App extends Component{
         }
 
         if(keyword) {
-            tasks = tasks.filter((task) => {
+            // tasks = tasks.filter((task) => {
+            //     return task.name.toLowerCase().indexOf(keyword) !== -1;
+            // });
+
+            tasks = _.filter(tasks, (task) => {
                 return task.name.toLowerCase().indexOf(keyword) !== -1;
             });
         }
+
+        if(sortBy === 'name') {
+            tasks.sort( (a, b) => {
+                if(a.name > b.name) return sortValue;
+                else if (a.name < b.name) return -sortValue;
+                else return 0
+            });
+        } else {
+            tasks.sort( (a, b) => {
+                if(a.status > b.status) return -sortValue;
+                else if (a.status < b.status) return sortValue;
+                else return 0
+            });
+        }
+
 
         return (
             <div className="container">
@@ -187,7 +227,11 @@ class App extends Component{
                             <span className="fa fa-plus mr-5">Thêm Công Việc</span>
                         </button>
                         {/*Search and Sort*/}
-                        <Control onHandleSearch={this.onHandleSearch} /><br/>
+                        <Control onHandleSearch={this.onHandleSearch}
+                                 onHandleSort={this.onHandleSort}
+                                 sortBy={sortBy}
+                                 sortValue={sortValue}
+                        /><br/>
                         {/*End*/}
                         {/* Task List*/}
                         <TaskList tasks={tasks}
