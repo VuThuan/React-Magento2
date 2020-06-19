@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import  { connect } from 'react-redux';
 import * as action from './../actions/index'
+import * as actions from "../actions";
 
 class TaskForm extends Component{
 
@@ -125,6 +126,9 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
         onAddTask : (task) => {
             dispatch(action.addTask(task));
+        },
+        onCloseForm: () => {
+            dispatch(actions.closeForm())
         }
     }
 }

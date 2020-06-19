@@ -5,11 +5,14 @@ import Control from "./components/Control";
 import TaskList from "./components/TaskList";
 import _ from 'lodash';
 
+import { connect } from 'react-redux';
+import isDisplayForm from "./reducers/isDisplayForm";
+import * as actions from "./actions/index";
+
 class App extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            isDisplayForm : false,
             taskEditing: null,
             filter : {
                 name : '',
@@ -21,18 +24,8 @@ class App extends Component{
         }
     }
 
-    addHandleJobs (event) {
-        if(this.state.isDisplayForm && this.state.taskEditing) {
-            this.setState({
-                isDisplayForm: true,
-                taskEditing : null
-            });
-        } else {
-            this.setState({
-                isDisplayForm: !this.state.isDisplayForm,
-                taskEditing : null
-            });
-        }
+    onToggleForm () {
+        this.props.onToggleForm();
     }
 
     onCloseForm = () => {
@@ -140,58 +133,19 @@ class App extends Component{
 
     render() {
         let {
-            isDisplayForm,
             taskEditing,
             filter,
             keyword ,
             sortBy,
             sortValue
         } = this.state;
+
+        const { isDisplayForm } = this.props;
+
         const elementTaskForm = isDisplayForm ? <TaskForm
-            onCloseForm={this.onCloseForm}
             onSubmit={this.onSubmit}
             taskEditing={taskEditing}
         /> : '';
-
-        // if(filter) {
-        //     if(filter.name) {
-        //         tasks = tasks.filter((task) => {
-        //             return task.name.toLowerCase().indexOf(filter.name) !== -1;
-        //         });
-        //     }
-        //     tasks = tasks.filter((task) => {
-        //         if(filter.status === -1) {
-        //             return task;
-        //         } else {
-        //             return task.status === (filter.status === 1 ? true : false)
-        //         }
-        //     });
-        // }
-        //
-        // if(keyword) {
-        //     // tasks = tasks.filter((task) => {
-        //     //     return task.name.toLowerCase().indexOf(keyword) !== -1;
-        //     // });
-        //
-        //     tasks = _.filter(tasks, (task) => {
-        //         return task.name.toLowerCase().indexOf(keyword) !== -1;
-        //     });
-        // }
-        //
-        // if(sortBy === 'name') {
-        //     tasks.sort( (a, b) => {
-        //         if(a.name > b.name) return sortValue;
-        //         else if (a.name < b.name) return -sortValue;
-        //         else return 0
-        //     });
-        // } else {
-        //     tasks.sort( (a, b) => {
-        //         if(a.status > b.status) return -sortValue;
-        //         else if (a.status < b.status) return sortValue;
-        //         else return 0
-        //     });
-        // }
-
 
         return (
             <div className="container">
@@ -204,7 +158,7 @@ class App extends Component{
                         { elementTaskForm }
                     </div>
                     <div className={isDisplayForm ? "col-xs-8 col-sm-8 col-md-8 col-lg-8" : "col-xs-12 col-sm-12 col-md-12 col-lg-12"}>
-                        <button type="button" className="btn btn-primary" onClick={() => this.addHandleJobs()}>
+                        <button type="button" className="btn btn-primary" onClick={() => this.onToggleForm()}>
                             <span className="fa fa-plus mr-5">Thêm Công Việc</span>
                         </button>
                         {/*Search and Sort*/}
@@ -228,4 +182,18 @@ class App extends Component{
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        isDisplayForm : state.isDisplayForm
+    };
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        onToggleForm: () => {
+            dispatch(actions.toggleForm())
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
